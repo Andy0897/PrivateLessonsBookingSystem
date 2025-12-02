@@ -1,0 +1,52 @@
+package com.example.PrivateLessonsBookingSystem.Appointment;
+
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
+import java.security.AlgorithmParameterGenerator;
+import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class AppointmentService {
+    AppointmentRepository appointmentRepository;
+    TeacherProfileRepository teacherProfileRepository;
+
+    public String submitAppointment(Appointment appointment, BindingResult bindingResult, Long teacherId, Principal principal, Model model) {
+        if(bindingResult.hasFieldErrors("date") || bindingResult.hasFieldErrors("time")) {
+            model.addAttribute("appointment", appointment);
+            return "appointment/create";
+        }
+        return "";
+    }
+
+    public List<LocalTime> getFreeTimesByDate(LocalDate date, Long teacherId) {
+        TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherId).get();
+        List<Appointment> appointmentsByDate = appointmentRepository.findAllByDate(date).stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
+        LocalTime localTime = teacherProfile.getWorkStart();
+        List<LocalTime> dailyFreeTimes = new ArrayList<>();
+        while (localTime.isBefore(teacherProfile.getWorkEnd()))
+        {
+            boolean isBusy = true;
+            for(Appointment appointment : appointmentsByDate) {
+                if(appointment.getTime().equals(localTime)) {
+                    isBusy = false;
+                }
+            }
+            if(isBusy) {
+                dailyFreeTimes.add(localTime);
+            }
+            localTime = localTime.plusMinutes(30);
+        }
+        return dailyFreeTimes;
+    }
+}
