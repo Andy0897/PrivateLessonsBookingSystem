@@ -20,6 +20,12 @@ public class TeacherProfileController {
     SubjectRepository subjectRepository;
     AppointmentService appointmentService;
 
+    public TeacherProfileController(TeacherProfileService teacherProfileService, SubjectRepository subjectRepository, AppointmentService appointmentService) {
+        this.teacherProfileService = teacherProfileService;
+        this.subjectRepository = subjectRepository;
+        this.appointmentService = appointmentService;
+    }
+
     @GetMapping("/create")
     public String getCreateTeacherProfile(Model model) {
         TeacherProfile teacherProfile = new TeacherProfile();

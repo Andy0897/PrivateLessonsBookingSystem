@@ -23,7 +23,7 @@ public class AppointmentController {
         return "appointment/create";
     }
 
-    @PostMapping("/submit/{teacherId}/{subjectId}}")
+    @PostMapping("/submit/{teacherId}/{subjectId}")
     public String getSubmitAppointment(@Valid Appointment appointment, BindingResult bindingResult, Long teacherId, Principal principal, Model model) {
         return appointmentService.submitAppointment(appointment, bindingResult, teacherId, principal, model);
     }

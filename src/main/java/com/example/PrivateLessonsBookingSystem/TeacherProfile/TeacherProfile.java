@@ -29,12 +29,13 @@ public class TeacherProfile {
     private String introduction;
 
     @OneToMany
+    @NotEmpty(message = "Полето не може да бъде празно.")
     List<Subject> subjects = new ArrayList<>();
 
-    @NotNull
+    @NotNull(message = "Полето не може да бъде празно.")
     private LocalTime workStart;
 
-    @NotNull
+    @NotNull(message = "Полето не може да бъде празно.")
     private LocalTime workEnd;
 
     public Long getId() {

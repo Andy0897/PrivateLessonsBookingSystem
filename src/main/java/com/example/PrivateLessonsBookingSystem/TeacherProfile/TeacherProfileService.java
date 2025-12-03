@@ -13,6 +13,11 @@ public class TeacherProfileService {
     UserRepository userRepository;
     TeacherProfileRepository teacherProfileRepository;
 
+    public TeacherProfileService(UserRepository userRepository, TeacherProfileRepository teacherProfileRepository) {
+        this.userRepository = userRepository;
+        this.teacherProfileRepository = teacherProfileRepository;
+    }
+
     public String submitTeacherProfile(TeacherProfile teacherProfile, BindingResult bindingResult, Principal principal, Model model) {
         if(bindingResult.hasFieldErrors("introduction")) {
             model.addAttribute("teacherProfile", teacherProfile);
