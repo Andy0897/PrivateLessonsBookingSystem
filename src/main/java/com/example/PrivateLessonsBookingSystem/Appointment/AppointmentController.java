@@ -1,8 +1,6 @@
 package com.example.PrivateLessonsBookingSystem.Appointment;
 
-import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileService;
 import jakarta.validation.Valid;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +15,6 @@ import java.util.List;
 @RequestMapping("/appointments")
 public class AppointmentController {
     AppointmentService appointmentService;
-
-
 
     @GetMapping("/book/teacherId")
     public String getBookAppointment(Model model) {

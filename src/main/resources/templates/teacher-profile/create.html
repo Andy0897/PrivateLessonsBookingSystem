@@ -3,8 +3,38 @@
 <body>
 <main>
     <div class="container mt-5" style="max-width: 600px;">
-        <form th:action="@{/teacher}" method="post" class="shadow-sm p-4 rounded">
+        <form th:action="@{/teacher-profiles/create}" method="post" class="shadow-sm p-4 rounded">
+            <div class="mb-4">
+                <label for="introduction" class="form-label auth-label">Представяне</label>
+                <input type="text" th:field="*{introduction}" id="introduction"
+                       class="form-control auth-input">
+                <div th:each="error : ${#fields.errors('introduction')}"
+                     th:text="${error}" class="alert alert-danger mt-2 auth-alert"></div>
+            </div>
 
+            <div class="col-lg-6 col-md-12">
+                <label for="subjects" class="mb-1">Предмети</label>
+                <select id="subjects" th:field="*{subjects}" class="form-control" multiple>
+                    <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
+                </select>
+                <div th:if="${!isSubjectSelected}" class="alert alert-danger mt-2" role="alert">
+                    Полето не може да бъде празно
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <label for="workStart" class="mb-1">Час на започване</label>
+                <select id="workStart" th:field="*{workStart}" class="form-control">
+                    <option th:each="time : ${times}" th:value="${times}" th:text="${time}"></option>
+                </select>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <label for="workEnd" class="mb-1">Час на приключване</label>
+                <select id="workEnd" th:field="*{workEnd}" class="form-control">
+                    <option th:each="time : ${times}" th:value="${time}" th:text="${time}"></option>
+                </select>
+            </div>
         </form>
     </div>
 </main>

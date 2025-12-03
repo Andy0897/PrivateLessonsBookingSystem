@@ -29,6 +29,18 @@ public class AppointmentService {
         return "";
     }
 
+    public List<LocalTime> generateTimes() {
+        LocalTime startTime = LocalTime.MIN;
+        LocalTime endTime = LocalTime.MAX;
+        List<LocalTime> times = new ArrayList<>();
+        LocalTime time = startTime;
+        while (time.isBefore(endTime)) {
+            times.add(time);
+            time.plusHours(1);
+        }
+        return times;
+    }
+
     public List<LocalTime> getFreeTimesByDate(LocalDate date, Long teacherId) {
         TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherId).get();
         List<Appointment> appointmentsByDate = appointmentRepository.findAllByDate(date).stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
@@ -45,7 +57,7 @@ public class AppointmentService {
             if(isBusy) {
                 dailyFreeTimes.add(localTime);
             }
-            localTime = localTime.plusMinutes(30);
+            localTime = localTime.plusHours(1);
         }
         return dailyFreeTimes;
     }

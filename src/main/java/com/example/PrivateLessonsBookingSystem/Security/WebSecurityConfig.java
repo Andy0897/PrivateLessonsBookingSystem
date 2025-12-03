@@ -26,10 +26,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/access-denied", "/submit-1**").permitAll()
+                        .requestMatchers("/", "/home", "/access-denied").permitAll()
                         .requestMatchers("/sign-in", "/sign-up", "/submit").anonymous()
-                        .requestMatchers("/clubs/my-club", "/clubs/create", "/clubs/submit", "/posts/**").hasAuthority("ADMIN")
-                        .requestMatchers("/clubs/submit-join-club/**").hasAuthority("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

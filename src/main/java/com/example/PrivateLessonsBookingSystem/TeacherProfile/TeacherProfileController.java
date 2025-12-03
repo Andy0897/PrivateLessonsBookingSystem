@@ -1,5 +1,7 @@
 package com.example.PrivateLessonsBookingSystem.TeacherProfile;
 
+import com.example.PrivateLessonsBookingSystem.Appointment.AppointmentService;
+import com.example.PrivateLessonsBookingSystem.Subject.SubjectRepository;
 import jakarta.validation.Valid;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
@@ -15,16 +17,20 @@ import java.security.Principal;
 @RequestMapping("/teacher-profiles")
 public class TeacherProfileController {
     TeacherProfileService teacherProfileService;
+    SubjectRepository subjectRepository;
+    AppointmentService appointmentService;
 
     @GetMapping("/create")
     public String getCreateTeacherProfile(Model model) {
         TeacherProfile teacherProfile = new TeacherProfile();
         model.addAttribute("teacherProfile", teacherProfile);
+        model.addAttribute("subjects", subjectRepository.findAll());
+        model.addAttribute("times", appointmentService.generateTimes());
         return "teacher-profile/create";
     }
 
     @PostMapping("/submit")
-    public String getSubmitTeacherPrfile(@Valid TeacherProfile teacherProfile, BindingResult bindingResult, Principal principal, Model model) {
+    public String getSubmitTeacherProfile(@Valid TeacherProfile teacherProfile, BindingResult bindingResult, Principal principal, Model model) {
         return teacherProfileService.submitTeacherProfile(teacherProfile, bindingResult, principal, model);
     }
 }
