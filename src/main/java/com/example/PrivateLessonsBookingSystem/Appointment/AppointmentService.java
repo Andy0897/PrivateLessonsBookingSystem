@@ -31,12 +31,12 @@ public class AppointmentService {
 
     public List<LocalTime> generateTimes() {
         LocalTime startTime = LocalTime.MIN;
-        LocalTime endTime = LocalTime.MAX;
+        LocalTime endTime = LocalTime.of(23, 0, 0);
         List<LocalTime> times = new ArrayList<>();
         LocalTime time = startTime;
         while (time.isBefore(endTime)) {
             times.add(time);
-            time.plusHours(1);
+            time = time.plusHours(1);
         }
         return times;
     }

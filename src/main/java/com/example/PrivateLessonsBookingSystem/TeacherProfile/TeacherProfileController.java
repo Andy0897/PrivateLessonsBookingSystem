@@ -32,6 +32,7 @@ public class TeacherProfileController {
         model.addAttribute("teacherProfile", teacherProfile);
         model.addAttribute("subjects", subjectRepository.findAll());
         model.addAttribute("times", appointmentService.generateTimes());
+        model.addAttribute("isSubjectSelected", true);
         return "teacher-profile/create";
     }
 
