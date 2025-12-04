@@ -1,5 +1,6 @@
 package com.example.PrivateLessonsBookingSystem.Appointment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,15 +17,20 @@ import java.util.List;
 public class AppointmentController {
     AppointmentService appointmentService;
 
-    @GetMapping("/book/teacherId")
-    public String getBookAppointment(Model model) {
-        Appointment appointment = new Appointment();
-        model.addAttribute("appointment", appointment);
-        return "appointment/create";
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
     }
 
-    @PostMapping("/submit/{teacherId}/{subjectId}")
-    public String getSubmitAppointment(@Valid Appointment appointment, BindingResult bindingResult, Long teacherId, Principal principal, Model model) {
+    @GetMapping("/book/{teacherId}")
+    public String getBookAppointment(@PathVariable("teacherId") Long teacherId, Model model) {
+        Appointment appointment = new Appointment();
+        model.addAttribute("appointment", appointment);
+        model.addAttribute("teacherId", teacherId);
+        return "appointment/book";
+    }
+
+    @PostMapping("/submit/{teacherId}")
+    public String getSubmitAppointment(@PathVariable("teacherId") Long teacherId, @Valid Appointment appointment, BindingResult bindingResult, Principal principal, Model model) {
         return appointmentService.submitAppointment(appointment, bindingResult, teacherId, principal, model);
     }
 

@@ -1,12 +1,14 @@
 package com.example.PrivateLessonsBookingSystem.Appointment;
 
 import com.example.PrivateLessonsBookingSystem.Subject.Subject;
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
 import com.example.PrivateLessonsBookingSystem.User.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointments")
@@ -17,7 +19,7 @@ public class Appointment {
     private Long id;
 
     @OneToOne
-    private User teacher;
+    private TeacherProfile teacher;
 
     @OneToOne
     private User student;
@@ -29,7 +31,7 @@ public class Appointment {
     private LocalDate date;
 
     @NotNull
-    private LocalDateTime time;
+    private LocalTime time;
 
     public Long getId() {
         return id;
@@ -39,11 +41,11 @@ public class Appointment {
         this.id = id;
     }
 
-    public User getTeacher() {
+    public TeacherProfile getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(User teacher) {
+    public void setTeacher(TeacherProfile teacher) {
         this.teacher = teacher;
     }
 
@@ -71,11 +73,11 @@ public class Appointment {
         this.date = date;
     }
 
-    public LocalDateTime getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 }

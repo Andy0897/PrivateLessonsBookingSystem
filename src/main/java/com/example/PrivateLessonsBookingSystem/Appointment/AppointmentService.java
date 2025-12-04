@@ -2,6 +2,9 @@ package com.example.PrivateLessonsBookingSystem.Appointment;
 
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
+import com.example.PrivateLessonsBookingSystem.User.User;
+import com.example.PrivateLessonsBookingSystem.User.UserRepository;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -20,13 +23,29 @@ import java.util.stream.Collectors;
 public class AppointmentService {
     AppointmentRepository appointmentRepository;
     TeacherProfileRepository teacherProfileRepository;
+    UserRepository userRepository;
+
+    public AppointmentService(AppointmentRepository appointmentRepository, TeacherProfileRepository teacherProfileRepository, UserRepository userRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.teacherProfileRepository = teacherProfileRepository;
+        this.userRepository = userRepository;
+    }
 
     public String submitAppointment(Appointment appointment, BindingResult bindingResult, Long teacherId, Principal principal, Model model) {
         if(bindingResult.hasFieldErrors("date") || bindingResult.hasFieldErrors("time")) {
+            System.out.println("Binding res");
+            System.out.println(bindingResult.hasFieldErrors("date"));
+            System.out.println(bindingResult.hasFieldErrors("time"));
             model.addAttribute("appointment", appointment);
-            return "appointment/create";
+            model.addAttribute("teacherId", teacherId);
+            return "appointment/book";
         }
-        return "";
+        TeacherProfile teacher = teacherProfileRepository.findById(teacherProfileRepository.getTeacherProfileIdByUserId(teacherId)).get();
+        appointment.setTeacher(teacher);
+        User student = userRepository.getUserByUsername(principal.getName());
+        appointment.setStudent(student);
+        appointmentRepository.save(appointment);
+        return "redirect:/";
     }
 
     public List<LocalTime> generateTimes() {
