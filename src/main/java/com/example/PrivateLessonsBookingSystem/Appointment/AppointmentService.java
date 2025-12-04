@@ -61,6 +61,7 @@ public class AppointmentService {
     }
 
     public List<LocalTime> getFreeTimesByDate(LocalDate date, Long teacherId) {
+        System.out.println(teacherId);
         TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherId).get();
         List<Appointment> appointmentsByDate = appointmentRepository.findAllByDate(date).stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
         LocalTime localTime = teacherProfile.getWorkStart();
@@ -79,5 +80,11 @@ public class AppointmentService {
             localTime = localTime.plusHours(1);
         }
         return dailyFreeTimes;
+    }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate date, Long teacherId) {
+        List<Appointment> appointments =  appointmentRepository.findAllByDate(date);
+        appointments.stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
+        return appointments;
     }
 }

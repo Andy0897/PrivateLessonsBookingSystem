@@ -1,8 +1,11 @@
 package com.example.PrivateLessonsBookingSystem.User;
 
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -20,10 +23,12 @@ import java.time.LocalTime;
 public class UserController {
     UserService userService;
     UserRepository userRepository;
+    TeacherProfileRepository teacherProfileRepository;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, TeacherProfileRepository teacherProfileRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.teacherProfileRepository = teacherProfileRepository;
     }
 
     @GetMapping({"/", "/home"})
@@ -50,6 +55,19 @@ public class UserController {
     @PostMapping("/submit")
     public String submitUser(@Valid User user, BindingResult bindingResult, Model model) {
         return userService.submitUser(user, bindingResult, model);
+    }
+
+    @GetMapping("/profile")
+    public String getProfile(Principal principal, Model model) {
+        User user = userRepository.getUserByUsername(principal.getName());
+        if(user.getRole().equals("TEACHER")) {
+            TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherProfileRepository.getIdByUserId(user.getId())).get();
+            model.addAttribute("teacherProfile", teacherProfile);
+        }
+        else if (user.getRole().equals("STUDENTS")) {
+            model.addAttribute("user", user);
+        }
+        return "profile";
     }
 
     @GetMapping("/logout")

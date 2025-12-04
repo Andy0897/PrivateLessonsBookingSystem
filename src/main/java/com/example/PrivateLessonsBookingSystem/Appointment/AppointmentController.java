@@ -1,5 +1,8 @@
 package com.example.PrivateLessonsBookingSystem.Appointment;
 
+import com.example.PrivateLessonsBookingSystem.Subject.SubjectRepository;
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
+import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -16,9 +19,15 @@ import java.util.List;
 @RequestMapping("/appointments")
 public class AppointmentController {
     AppointmentService appointmentService;
+    AppointmentRepository appointmentRepository;
+    TeacherProfileRepository teacherProfileRepository;
+    SubjectRepository subjectRepository;
 
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(AppointmentService appointmentService, AppointmentRepository appointmentRepository, TeacherProfileRepository teacherProfileRepository, SubjectRepository subjectRepository) {
         this.appointmentService = appointmentService;
+        this.appointmentRepository = appointmentRepository;
+        this.teacherProfileRepository = teacherProfileRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     @GetMapping("/book/{teacherId}")
@@ -26,6 +35,7 @@ public class AppointmentController {
         Appointment appointment = new Appointment();
         model.addAttribute("appointment", appointment);
         model.addAttribute("teacherId", teacherId);
+        model.addAttribute("subjects", teacherProfileRepository.findById(teacherId).get().getSubjects());
         return "appointment/book";
     }
 
@@ -38,5 +48,12 @@ public class AppointmentController {
     @GetMapping("/update-free-daily-times/{date}/{teacherId}")
     public List<LocalTime> getFreeDailyTimes(@PathVariable("date") LocalDate date, @PathVariable("teacherId") Long teacherId) {
         return appointmentService.getFreeTimesByDate(date, teacherId);
+    }
+
+    @ResponseBody
+    @GetMapping("/update-daily-appointments/{date}/{teacherId}")
+    public List<Appointment> getAppointmentsByDate(@PathVariable("date") LocalDate date, @PathVariable("teacherId") Long teacherId) {
+        System.out.println("Here");
+        return appointmentService.getAppointmentsByDate(date, teacherId);
     }
 }
