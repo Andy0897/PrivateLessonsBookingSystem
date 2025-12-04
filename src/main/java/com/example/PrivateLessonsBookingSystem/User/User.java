@@ -36,6 +36,7 @@ public class User {
 
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'STUDENT'")
     private String role;
+
     @Column(columnDefinition = "BIT DEFAULT 1")
     private boolean enable;
 
