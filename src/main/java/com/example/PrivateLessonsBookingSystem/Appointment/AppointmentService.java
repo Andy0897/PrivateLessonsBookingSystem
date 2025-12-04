@@ -40,7 +40,7 @@ public class AppointmentService {
             model.addAttribute("teacherId", teacherId);
             return "appointment/book";
         }
-        TeacherProfile teacher = teacherProfileRepository.findById(teacherProfileRepository.getTeacherProfileIdByUserId(teacherId)).get();
+        TeacherProfile teacher = teacherProfileRepository.findById(teacherId).get();
         appointment.setTeacher(teacher);
         User student = userRepository.getUserByUsername(principal.getName());
         appointment.setStudent(student);
