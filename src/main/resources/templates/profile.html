@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
 <body>
-<h1>Appointments</h1>
-<input type="date" id="date" onchange="updateAppointments(this.value)">
-<div id="appointments">
+<nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <h1>Appointments</h1>
+    <input type="date" id="date" onchange="updateAppointments(this.value)">
+    <div id="appointments">
 
-</div>
+    </div>
+</main>
 </body>
 </html>
 <script>
