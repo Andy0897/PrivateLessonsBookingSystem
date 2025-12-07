@@ -1,0 +1,39 @@
+<footer class="footer mt-5 py-4 bg-light border-top" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container" style="max-width: 1100px;">
+        <div class="row text-center text-md-start">
+            <div class="col-md-4 mb-3 d-flex flex-column align-items-center align-items-md-start">
+                <h4 class="fw-bold text-primary mb-1">TeacherConnect</h4>
+                <p class="text-muted mb-0">Платформа за записване на часове при учители.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="fw-semibold text-primary">Навигация</h6>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/" class="text-decoration-none text-secondary">Начало</a></li>
+                    <li><a href="/teachers" class="text-decoration-none text-secondary">Учители</a></li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a href="/profile" class="text-decoration-none text-secondary">Профил</a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()">
+                        <a href="/sign-in" class="text-decoration-none text-secondary">Вход</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6 class="fw-semibold text-primary">Контакти</h6>
+                <p class="text-muted mb-1">email@example.com</p>
+                <p class="text-muted mb-1">+359 888 123 456</p>
+                <p class="text-muted mb-0">София, България</p>
+            </div>
+
+        </div>
+        <hr class="border-secondary-subtle">
+        <div class="text-center small text-muted">
+            <span sec:authorize="isAuthenticated()">
+                Вписан като:
+                <strong sec:authentication="name"></strong>
+            </span>
+            <span class="mx-2">|</span>
+            © 2025 TeacherConnect. Всички права запазени.
+        </div>
+    </div>
+</footer>

@@ -1,35 +1,51 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div class="container-fluid" style="max-width: 1000px;">
-        <a class="navbar-brand" href="/">
-            <h2 class="mr-4 text-primary" style="font-weight: bold;">Booking Lessons</h2>
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3 rounded-bottom"
+     xmlns:sec="http://www.w3.org/1999/xhtml"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container" style="max-width: 1200px;">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <h2 class="text-primary fw-bold mb-0">TeacherConnect</h2>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Начало</a>
+                    <a class="nav-link fw-semibold" href="/">Начало</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/teacher-profiles">Учители</a>
+                    <a class="nav-link fw-semibold" href="/teacher-profiles">Учители</a>
                 </li>
             </ul>
-            <div class="d-flex align-items-center">
-                <div sec:authorize="isAnonymous" class="d-flex gap-2">
-                    <button class="btn btn-outline-primary" onclick="window.location.href='/sign-in';">Вход</button>
-                    <button class="btn btn-primary" onclick="window.location.href='/sign-up';">Регистрация</button>
+            <div class="d-flex align-items-center gap-2">
+                <div sec:authorize="isAnonymous()" class="d-flex gap-2">
+                    <button class="btn btn-outline-primary px-4"
+                            onclick="window.location.href='/sign-in';">
+                        Вход
+                    </button>
+                    <button class="btn btn-primary px-4"
+                            onclick="window.location.href='/sign-up';">
+                        Регистрация
+                    </button>
                 </div>
-                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-2">
-                    <button class="btn btn-primary" onclick="window.location.href='/profile';">
+                <div sec:authorize="isAuthenticated()" class="d-flex gap-2 align-items-center">
+                    <button class="btn btn-primary px-4"
+                            onclick="window.location.href='/profile';">
                         Профил
                     </button>
-                </div>
-                <div sec:authorize="hasAuthority('STUDENT')" class="d-flex align-items-center gap-2">
-                    <button class="btn btn-primary" onclick="window.location.href='/teacher-profiles/create';">
+                    <button sec:authorize="hasAuthority('STUDENT')"
+                            class="btn btn-outline-primary px-4"
+                            onclick="window.location.href='/teacher-profiles/create';">
                         Стани учител
                     </button>
+                    <form th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" class="btn btn-danger px-4">
+                            Изход
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

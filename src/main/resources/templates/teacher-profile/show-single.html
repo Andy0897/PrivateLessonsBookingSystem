@@ -1,12 +1,47 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body>
+<body class="lesson-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
-    <h1 th:text="|${teacherProfile.user.firstName} ${teacherProfile.user.lastName}|"></h1>
-    <p th:each="subject : ${teacherProfile.subjects}" th:text="${subject.name}"></p>
-    <button type="button" th:onclick="|window.location.href='/appointments/book/${teacherProfile.id}';|">Запази час</button>
+    <div class="container py-5">
+        <div class="white-card mb-5">
+            <div class="row align-items-center g-4">
+                <div class="col-md-4 text-center">
+                    <img th:if="${teacherProfile.profilePicture != null}"
+                         th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(teacherProfile.profilePicture)}"
+                         class="teacher-details-avatar rounded-circle border border-4 shadow"/>
+                    <img th:if="${teacherProfile.profilePicture == null}"
+                         src="/images/default-profile.png"
+                         class="teacher-details-avatar rounded-circle border border-4 shadow"/>
+                </div>
+                <div class="col-md-8">
+                    <h1 class="fw-bold mb-3"
+                        th:text="|${teacherProfile.user.firstName} ${teacherProfile.user.lastName}|"></h1>
+                    <p class="fs-5 opacity-75"
+                       th:text="${teacherProfile.introduction}"></p>
+                    <div class="mt-4">
+                        <h5>Преподавани предмети:</h5>
+                        <span class="badge me-2 mb-2 px-3 py-2"
+                              th:each="subject : ${teacherProfile.subjects}"
+                              th:text="${subject.name}"></span>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Работно време:</h5>
+                        <p class="small opacity-75"
+                           th:text="|${#temporals.format(teacherProfile.workStart, 'HH:mm')} - ${#temporals.format(teacherProfile.workEnd, 'HH:mm')}|"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div sec:authorize="hasAuthority('STUDENT')" class="text-center mt-5">
+            <button class="btn btn-primary neon-button px-5 py-3 fs-5 fw-semibold"
+                    th:onclick="|window.location.href='/appointments/book/${teacherProfile.id}';|">
+                Запази час
+            </button>
+        </div>
+    </div>
 </main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

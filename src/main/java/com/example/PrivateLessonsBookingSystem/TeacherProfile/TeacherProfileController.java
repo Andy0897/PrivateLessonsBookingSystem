@@ -1,6 +1,7 @@
 package com.example.PrivateLessonsBookingSystem.TeacherProfile;
 
 import com.example.PrivateLessonsBookingSystem.Appointment.AppointmentService;
+import com.example.PrivateLessonsBookingSystem.ImageEncoder;
 import com.example.PrivateLessonsBookingSystem.Subject.SubjectRepository;
 import jakarta.validation.Valid;
 import org.springframework.boot.Banner;
@@ -30,6 +31,7 @@ public class TeacherProfileController {
     @GetMapping
     public String getShowTeacherProfiles(Model model) {
         model.addAttribute("teacherProfiles", teacherProfileRepository.findAll());
+        model.addAttribute("encoder", new ImageEncoder());
         return "teacher-profile/show-all";
     }
 
@@ -37,6 +39,7 @@ public class TeacherProfileController {
     public String getShowSingleTeacherProfile(@PathVariable("id") Long teacherId, Model model) {
         TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherId).get();
         model.addAttribute("teacherProfile", teacherProfile);
+        model.addAttribute("encoder", new ImageEncoder());
         return "teacher-profile/show-single";
     }
 

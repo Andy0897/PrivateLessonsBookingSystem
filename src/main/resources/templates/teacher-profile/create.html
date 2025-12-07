@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
-<body>
+<body class="lesson-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
-    <div class="container mt-5" style="max-width: 600px;">
-        <form th:action="@{/teacher-profiles/submit}" method="post" th:object="${teacherProfile}" class="shadow-sm p-4 rounded" enctype="multipart/form-data">
-            <div class="mb-4">
-                <label for="profilePicture" class="form-label glow-label">Профилна снимка</label>
-                <input type="file" id="profilePicture"
-                       name="profilePicture"
-                       class="form-control neon-input"
-                       accept="image/png, image/gif, image/jpeg"/>
-
-                <div th:if="${hasUploadError}" class="alert alert-danger mt-2">Възникна грешка при качване</div>
-                <div th:if="${!isImageUploaded}" class="alert alert-danger mt-2">
-                    Полето не може да бъде празно
+    <div class="container mt-5" style="max-width: 650px;">
+        <div class="card shadow-sm rounded-4 p-4">
+            <h3 class="text-center mb-4 text-primary fw-bold">Създаване на учителски профил</h3>
+            <form th:action="@{/teacher-profiles/submit}"
+                  method="post"
+                  th:object="${teacherProfile}"
+                  enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="profilePicture" class="form-label">Профилна снимка</label>
+                    <input type="file" id="profilePicture" name="profilePicture"
+                           class="form-control"
+                           accept="image/png, image/gif, image/jpeg"/>
+                    <div th:if="${hasUploadError}" class="alert alert-danger mt-2">Възникна грешка при качване</div>
+                    <div th:if="${!isImageUploaded}" class="alert alert-danger mt-2">Полето не може да бъде празно</div>
                 </div>
-                <div th:each="error : ${#fields.errors('profilePicture')}"
-                     th:text="${error}" class="alert alert-danger mt-2 auth-alert"></div>
-            </div>
-
-            <div class="mb-4">
-                <label for="introduction" class="form-label auth-label">Представяне</label>
-                <input type="text" th:field="*{introduction}" id="introduction"
-                       class="form-control auth-input">
-                <div th:each="error : ${#fields.errors('introduction')}"
-                     th:text="${error}" class="alert alert-danger mt-2 auth-alert"></div>
-            </div>
-
-            <div class="col-lg-6 col-md-12">
-                <label for="subjects" class="mb-1">Предмети</label>
-                <select id="subjects" th:field="*{subjects}" class="form-control" multiple>
-                    <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
-                </select>
-                <div th:if="${!isSubjectSelected}" class="alert alert-danger mt-2" role="alert">
-                    Полето не може да бъде празно
+                <div class="mb-4">
+                    <label for="introduction" class="form-label">Представяне</label>
+                    <input type="text" id="introduction" th:field="*{introduction}" class="form-control">
+                    <div th:each="error : ${#fields.errors('introduction')}"
+                         th:text="${error}" class="alert alert-danger mt-2"></div>
                 </div>
-            </div>
-
-            <div class="col-lg-6 col-md-12">
-                <label for="workStart" class="mb-1">Час на започване</label>
-                <select id="workStart" th:field="*{workStart}" class="form-control">
-                    <option th:each="time : ${times}" th:value="${time}" th:text="${#temporals.format(time, 'HH:mm')}"></option>
-                </select>
-            </div>
-
-            <div class="col-lg-6 col-md-12">
-                <label for="workEnd" class="mb-1">Час на приключване</label>
-                <select id="workEnd" th:field="*{workEnd}" class="form-control">
-                    <option th:each="time : ${times}" th:value="${time}" th:text="${#temporals.format(time, 'HH:mm')}"></option>
-                </select>
-                <div th:if="${timesErrors}" class="alert alert-danger mt-2" role="alert">
-                    Грешка при избиране на часове
+                <div class="mb-4">
+                    <label for="subjects" class="form-label">Предмети</label>
+                    <select id="subjects" th:field="*{subjects}" class="form-control" multiple>
+                        <option th:each="subject : ${subjects}"
+                                th:value="${subject.id}"
+                                th:text="${subject.name}">
+                        </option>
+                    </select>
+                    <div th:if="${!isSubjectSelected}" class="alert alert-danger mt-2">
+                        Полето не може да бъде празно
+                    </div>
                 </div>
-            </div>
-
-            <input type="submit" class="btn btn-primary mb-2 w-100" value="Регистрация"/>
-        </form>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="workStart" class="form-label">Час на започване</label>
+                        <select id="workStart" th:field="*{workStart}" class="form-control">
+                            <option th:each="time : ${times}"
+                                    th:value="${time}"
+                                    th:text="${#temporals.format(time, 'HH:mm')}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="workEnd" class="form-label">Час на приключване</label>
+                        <select id="workEnd" th:field="*{workEnd}" class="form-control">
+                            <option th:each="time : ${times}"
+                                    th:value="${time}"
+                                    th:text="${#temporals.format(time, 'HH:mm')}">
+                            </option>
+                        </select>
+                        <div th:if="${timesErrors}" class="alert alert-danger mt-2">
+                            Грешка при избиране на часове
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-semibold">
+                    Регистрация
+                </button>
+            </form>
+        </div>
     </div>
 </main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

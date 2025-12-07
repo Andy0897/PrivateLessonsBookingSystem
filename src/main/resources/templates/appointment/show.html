@@ -1,18 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<<div sec:authorize="hasAuthority('TEACHER')">
-    <input type="date" id="teacherDate" onchange="updateTeacherAppointments(this.value)"><br>
-    <div id="teacherAppointments"></div>
-</div>
-<<div sec:authorize="hasAuthority('STUDENT')">
-    <input type="date" id="studentDate" onchange="updateStudentAppointments(this.value)"><br>
-    <div id="studentAppointments"></div>
-</div>
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body class="lesson-bg">
+<nav th:replace="~{fragments/navbar}"></nav>
+<main class="py-5">
+    <div class="container">
+        <div sec:authorize="hasAuthority('TEACHER')" class="mb-5">
+            <div class="dashboard-card p-4 shadow-lg">
+                <h2 class="fw-bold text-white mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-calendar2-week"></i>
+                    Вашите часове за деня
+                </h2>
+                <p class="text-light opacity-75 mb-4">
+                    Изберете дата, за да видите записаните ученици и планираните уроци.
+                </p>
+                <label class="text-white mb-1 fw-semibold">Избери дата</label>
+                <input type="date" id="teacherDate" onchange="updateTeacherAppointments(this.value)"
+                       class="form-control w-auto mb-4">
+                <div id="teacherAppointments" class="row g-3"></div>
+                <div id="teacherNoResults" class="text-center mt-3 text-white opacity-75" style="display:none;">
+                    Няма запазени часове за тази дата.
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasAuthority('STUDENT')" class="mb-5">
+            <div class="dashboard-card p-4 shadow-lg">
+                <h2 class="fw-bold text-white mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-journal-check"></i>
+                    Вашите записани уроци
+                </h2>
+                <p class="text-light opacity-75 mb-4">
+                    Изберете дата, за да видите при кой учител имате записан урок и кога се провежда.
+                </p>
+                <label class="text-white mb-1 fw-semibold">Избери дата</label>
+                <input type="date" id="studentDate" onchange="updateStudentAppointments(this.value)"
+                       class="form-control w-auto mb-4">
+                <div id="studentAppointments" class="row g-3"></div>
+                <div id="studentNoResults" class="text-center mt-3 text-white opacity-75" style="display:none;">
+                    Няма запазени часове за тази дата.
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
 <script>
@@ -21,55 +53,73 @@
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
 
-    if (dd < 10) {
-       dd = '0' + dd;
-    }
-
-    if (mm < 10) {
-       mm = '0' + mm;
-    }
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
 
     today = yyyy + '-' + mm + '-' + dd;
+
     document.getElementById("teacherDate").setAttribute("min", today);
     document.getElementById("studentDate").setAttribute("min", today);
 
+    function createAppointmentCard(title, subtitle) {
+        const col = document.createElement("div");
+        col.className = "col-md-4 col-sm-6";
+
+        const card = document.createElement("div");
+        card.className = "appointment-card shadow-sm p-3";
+
+        const name = document.createElement("h5");
+        name.className = "fw-bold";
+        name.textContent = title;
+
+        const time = document.createElement("p");
+        time.className = "text-muted mb-0";
+        time.textContent = subtitle;
+
+        card.appendChild(name);
+        card.appendChild(time);
+        col.appendChild(card);
+
+        return col;
+    }
+
     function updateTeacherAppointments(date) {
-        fetch(`/appointments/update-daily-appointments/${date}/[[${teacher.id}]]`)
+        fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${teacher.id}]]`)
         .then(response => response.json())
         .then(appointments => {
-            const appointmentsBlock = document.getElementById("appointments");
-            while (appointmentsBlock.firstChild) {
-                appointmentsBlock.removeChild(appointmentsBlock.lastChild);
-            }
-            appointments.forEach(appointment => {
-                const p1 = document.createElement("p");
-                p1.textContent = appointment.student.firstName + ' ' + appointment.student.lastName;
-                const p2 = document.createElement("p");
-                p2.textContent = appointment.date + ' ' + appointment.time;
-                appointmentsBlock.appendChild(p1);
-                appointmentsBlock.appendChild(p2);
+
+            const block = document.getElementById("teacherAppointments");
+            block.innerHTML = ""; // clear
+
+            appointments.forEach(ap => {
+                const fullName = ap.student.firstName + " " + ap.student.lastName;
+                const timeText = ap.date + " • " + ap.time;
+
+                const card = createAppointmentCard(fullName, timeText);
+                block.appendChild(card);
             });
+
         })
-        .catch(error => console.error("Error fetching free times:", error));
+        .catch(error => console.error("Error loading teacher appointments:", error));
     }
 
     function updateStudentAppointments(date) {
-        fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${student.id}]]`)
+        fetch(`/appointments/update-daily-student-appointments/${date}/[[${student.id}]]`)
         .then(response => response.json())
         .then(appointments => {
-            const appointmentsBlock = document.getElementById("appointments");
-            while (appointmentsBlock.firstChild) {
-                appointmentsBlock.removeChild(appointmentsBlock.lastChild);
-            }
-            appointments.forEach(appointment => {
-                const p1 = document.createElement("p");
-                p1.textContent = appointment.student.firstName + ' ' + appointment.student.lastName;
-                const p2 = document.createElement("p");
-                p2.textContent = appointment.date + ' ' + appointment.time;
-                appointmentsBlock.appendChild(p1);
-                appointmentsBlock.appendChild(p2);
+
+            const block = document.getElementById("studentAppointments");
+            block.innerHTML = ""; // clear
+
+            appointments.forEach(ap => {
+                const fullName = ap.teacher.user.firstName + " " + ap.teacher.user.lastName;
+                const timeText = ap.date + " • " + ap.time;
+
+                const card = createAppointmentCard(fullName, timeText);
+                block.appendChild(card);
             });
+
         })
-        .catch(error => console.error("Error fetching free times:", error));
+        .catch(error => console.error("Error loading student appointments:", error));
     }
 </script>

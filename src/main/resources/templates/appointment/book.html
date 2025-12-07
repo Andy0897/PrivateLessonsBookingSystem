@@ -1,25 +1,50 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="~{fragments/head}"></head>
-<body>
+<head th:replace="~{fragments/head}">
+</head>
+<body class="lesson-bg">
 <nav th:replace="~{fragments/navbar}"></nav>
-<main>
-    <div class="container mt-5" style="max-width: 600px;">
-        <form th:action="@{/appointments/submit/{teacherId}(teacherId=${teacherId})}" method="post" th:object="${appointment}">
-            <label for="times" class="mb-1">Дата</label>
-            <input type="date" id="date" th:field="*{date}" onchange="updateFreeTimes(this.value)"><br>
-            <label for="times" class="mb-1">Свободни часове</label>
-            <select id="times" th:field="*{time}" class="form-control">
-            </select><br>
-            <label for="times" class="mb-1">Предмет</label>
-            <select id="subject" th:field="*{subject}" class="form-control">
-                <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
-            </select><br>
-
-            <input type="submit" class="btn btn-primary mb-2 w-100" value="Регистрация"/>
-        </form>
+<main class="py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="card booking-card shadow-lg p-4">
+            <h2 class="text-center mb-4 fw-bold title-text">
+                Запази частен урок
+            </h2>
+            <p class="text-center text-muted mb-4">
+                Изберете удобна дата, свободен час и предмет.
+                След потвърждение урокът ще бъде добавен към вашия график.
+            </p>
+            <form th:action="@{/appointments/submit/{teacherId}(teacherId=${teacherId})}"
+                  method="post" th:object="${appointment}" class="row g-3">
+                <div class="col-12">
+                    <label for="date" class="form-label fw-semibold">Дата</label>
+                    <input type="date" id="date" th:field="*{date}" onchange="updateFreeTimes(this.value)"
+                           class="form-control custom-input">
+                </div>
+                <div class="col-12">
+                    <label for="times" class="form-label fw-semibold">Свободни часове</label>
+                    <select id="times" th:field="*{time}" class="form-select custom-input">
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="subject" class="form-label fw-semibold">Предмет</label>
+                    <select id="subject" th:field="*{subject}" class="form-select custom-input">
+                        <option th:each="subject : ${subjects}"
+                                th:value="${subject.id}"
+                                th:text="${subject.name}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <input type="submit"
+                           class="btn btn-gradient w-100 fw-bold py-2"
+                           value="Запази урок">
+                </div>
+            </form>
+        </div>
     </div>
 </main>
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
 <script>
@@ -28,30 +53,25 @@
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
 
-    if (dd < 10) {
-       dd = '0' + dd;
-    }
-
-    if (mm < 10) {
-       mm = '0' + mm;
-    }
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
 
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById("date").setAttribute("min", today);
 
     function updateFreeTimes(date) {
         fetch(`/appointments/update-free-daily-times/${date}/[[${teacherId}]]`)
-        .then(response => response.json())
-        .then(times => {
-            const timesDropdown = document.getElementById("times");
-            timesDropdown.innerHTML = '<option value="">Избери</option>';
-            times.forEach(time => {
-                const option = document.createElement("option");
-                option.value = time;
-                option.textContent = time;
-                timesDropdown.appendChild(option);
-            });
-        })
-        .catch(error => console.error("Error fetching free times:", error));
+            .then(response => response.json())
+            .then(times => {
+                const timesDropdown = document.getElementById("times");
+                timesDropdown.innerHTML = '<option value="">Избери</option>';
+                times.forEach(time => {
+                    const option = document.createElement("option");
+                    option.value = time;
+                    option.textContent = time;
+                    timesDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching free times:", error));
     }
 </script>

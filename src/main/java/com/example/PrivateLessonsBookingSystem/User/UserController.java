@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -34,7 +36,13 @@ public class UserController {
 
     @GetMapping({"/", "/home"})
     public String getHome(Model model) {
-        model.addAttribute("time", LocalTime.now());
+        List<TeacherProfile> teachers = new ArrayList<>();
+        List<TeacherProfile> allTeachers = (List<TeacherProfile>) teacherProfileRepository.findAll();
+        for (int i = 0; i < (allTeachers.size() >= 3 ? 3 : allTeachers.size()); i++) {
+            teachers.add(allTeachers.get(i));
+        }
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("encoder", new ImageEncoder());
         return "home";
     }
 
@@ -61,12 +69,12 @@ public class UserController {
     @GetMapping("/profile")
     public String getProfile(Principal principal, Model model) {
         User user = userRepository.getUserByUsername(principal.getName());
-        if(user.getRole().equals("TEACHER")) {
+        if (user.getRole().equals("TEACHER")) {
             TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherProfileRepository.getIdByUserId(user.getId())).get();
             model.addAttribute("teacherProfile", teacherProfile);
+            model.addAttribute("user", user);
             model.addAttribute("encoder", new ImageEncoder());
-        }
-        else if (user.getRole().equals("STUDENT")) {
+        } else if (user.getRole().equals("STUDENT")) {
             model.addAttribute("user", user);
             model.addAttribute("teacherProfile", new TeacherProfile());
         }
