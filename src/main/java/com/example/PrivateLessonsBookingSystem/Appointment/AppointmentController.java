@@ -3,6 +3,8 @@ package com.example.PrivateLessonsBookingSystem.Appointment;
 import com.example.PrivateLessonsBookingSystem.Subject.SubjectRepository;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
+import com.example.PrivateLessonsBookingSystem.User.User;
+import com.example.PrivateLessonsBookingSystem.User.UserRepository;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -22,12 +24,14 @@ public class AppointmentController {
     AppointmentRepository appointmentRepository;
     TeacherProfileRepository teacherProfileRepository;
     SubjectRepository subjectRepository;
+    UserRepository userRepository;
 
-    public AppointmentController(AppointmentService appointmentService, AppointmentRepository appointmentRepository, TeacherProfileRepository teacherProfileRepository, SubjectRepository subjectRepository) {
+    public AppointmentController(AppointmentService appointmentService, AppointmentRepository appointmentRepository, TeacherProfileRepository teacherProfileRepository, SubjectRepository subjectRepository, UserRepository userRepository) {
         this.appointmentService = appointmentService;
         this.appointmentRepository = appointmentRepository;
         this.teacherProfileRepository = teacherProfileRepository;
         this.subjectRepository = subjectRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/book/{teacherId}")
@@ -42,6 +46,20 @@ public class AppointmentController {
     @PostMapping("/submit/{teacherId}")
     public String getSubmitAppointment(@PathVariable("teacherId") Long teacherId, @Valid Appointment appointment, BindingResult bindingResult, Principal principal, Model model) {
         return appointmentService.submitAppointment(appointment, bindingResult, teacherId, principal, model);
+    }
+
+    @GetMapping
+    public String getShowAppointments(Principal principal, Model model) {
+        User user = userRepository.getUserByUsername(principal.getName());
+        if (user.getRole().equals("TEACHER")) {
+            TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherProfileRepository.getIdByUserId(user.getId())).get();
+            model.addAttribute("teacher", teacherProfile);
+            model.addAttribute("student", user);
+        } else {
+            model.addAttribute("student", user);
+            model.addAttribute("teacher", new TeacherProfile());
+        }
+        return "appointment/show";
     }
 
     @ResponseBody

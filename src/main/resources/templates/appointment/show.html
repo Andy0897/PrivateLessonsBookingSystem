@@ -6,11 +6,11 @@
 </head>
 <body>
 <<div sec:authorize="hasAuthority('TEACHER')">
-    <input type="date" id="teacherDate" th:field="*{date}" onchange="updateTeacherAppointments(this.value)"><br>
+    <input type="date" id="teacherDate" onchange="updateTeacherAppointments(this.value)"><br>
     <div id="teacherAppointments"></div>
 </div>
 <<div sec:authorize="hasAuthority('STUDENT')">
-    <input type="date" id="studentDate" th:field="*{date}" onchange="updateStudentAppointments(this.value)"><br>
+    <input type="date" id="studentDate" onchange="updateStudentAppointments(this.value)"><br>
     <div id="studentAppointments"></div>
 </div>
 </body>
@@ -34,7 +34,7 @@
     document.getElementById("studentDate").setAttribute("min", today);
 
     function updateTeacherAppointments(date) {
-        fetch(`/appointments/update-daily-appointments/${date}/[[${teacherProfile.id}]]`)
+        fetch(`/appointments/update-daily-appointments/${date}/[[${teacher.id}]]`)
         .then(response => response.json())
         .then(appointments => {
             const appointmentsBlock = document.getElementById("appointments");
@@ -54,7 +54,7 @@
     }
 
     function updateStudentAppointments(date) {
-        fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${teacherProfile.id}]]`)
+        fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${student.id}]]`)
         .then(response => response.json())
         .then(appointments => {
             const appointmentsBlock = document.getElementById("appointments");
