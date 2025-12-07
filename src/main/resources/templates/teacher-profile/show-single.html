@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <h1 th:text="|${teacherProfile.user.firstName} ${teacherProfile.user.lastName}|"></h1>
+    <p th:each="subject : ${teacherProfile.subjects}" th:text="${subject.name}"></p>
+    <button type="button" th:onclick="|window.location.href='/appointments/book/${teacherProfile.id}';|">Запази час</button>
+</main>
+</body>
+</html>

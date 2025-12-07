@@ -1,5 +1,6 @@
 package com.example.PrivateLessonsBookingSystem.User;
 
+import com.example.PrivateLessonsBookingSystem.ImageEncoder;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,9 +64,11 @@ public class UserController {
         if(user.getRole().equals("TEACHER")) {
             TeacherProfile teacherProfile = teacherProfileRepository.findById(teacherProfileRepository.getIdByUserId(user.getId())).get();
             model.addAttribute("teacherProfile", teacherProfile);
+            model.addAttribute("encoder", new ImageEncoder());
         }
-        else if (user.getRole().equals("STUDENTS")) {
+        else if (user.getRole().equals("STUDENT")) {
             model.addAttribute("user", user);
+            model.addAttribute("teacherProfile", new TeacherProfile());
         }
         return "profile";
     }

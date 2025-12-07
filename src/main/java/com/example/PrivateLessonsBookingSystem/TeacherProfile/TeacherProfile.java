@@ -24,11 +24,15 @@ public class TeacherProfile {
     @OneToOne
     private User user;
 
+    @Lob
+    @Column(name = "profilePicture", columnDefinition = "LONGBLOB")
+    private byte[] profilePicture;
+
     @Size(max = 1000, message = "Представянето не трябва да надвишава 1000 символа")
     @NotEmpty(message = "Полето не може да бъде празно.")
     private String introduction;
 
-    @OneToMany
+    @ManyToMany
     @NotEmpty(message = "Полето не може да бъде празно.")
     List<Subject> subjects = new ArrayList<>();
 
@@ -52,6 +56,14 @@ public class TeacherProfile {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getIntroduction() {

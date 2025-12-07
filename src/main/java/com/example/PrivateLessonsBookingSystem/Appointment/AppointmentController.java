@@ -51,9 +51,14 @@ public class AppointmentController {
     }
 
     @ResponseBody
-    @GetMapping("/update-daily-appointments/{date}/{teacherId}")
-    public List<Appointment> getAppointmentsByDate(@PathVariable("date") LocalDate date, @PathVariable("teacherId") Long teacherId) {
-        System.out.println("Here");
-        return appointmentService.getAppointmentsByDate(date, teacherId);
+    @GetMapping("/update-daily-teacher-appointments/{date}/{teacherId}")
+    public List<Appointment> getTeacherAppointmentsByDate(@PathVariable("date") LocalDate date, @PathVariable("teacherId") Long teacherId) {
+        return appointmentService.getTeacherAppointmentsByDate(date, teacherId);
+    }
+
+    @ResponseBody
+    @GetMapping("/update-daily-student-appointments/{date}/{studentId}")
+    public List<Appointment> getStudentAppointmentsByDate(@PathVariable("date") LocalDate date, @PathVariable("studentId") Long studentId) {
+        return appointmentService.getStudentAppointmentsByDate(date, studentId);
     }
 }

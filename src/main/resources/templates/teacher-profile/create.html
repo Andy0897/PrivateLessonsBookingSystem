@@ -5,7 +5,22 @@
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
     <div class="container mt-5" style="max-width: 600px;">
-        <form th:action="@{/teacher-profiles/submit}" method="post" th:object="${teacherProfile}" class="shadow-sm p-4 rounded">
+        <form th:action="@{/teacher-profiles/submit}" method="post" th:object="${teacherProfile}" class="shadow-sm p-4 rounded" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="profilePicture" class="form-label glow-label">Профилна снимка</label>
+                <input type="file" id="profilePicture"
+                       name="profilePicture"
+                       class="form-control neon-input"
+                       accept="image/png, image/gif, image/jpeg"/>
+
+                <div th:if="${hasUploadError}" class="alert alert-danger mt-2">Възникна грешка при качване</div>
+                <div th:if="${!isImageUploaded}" class="alert alert-danger mt-2">
+                    Полето не може да бъде празно
+                </div>
+                <div th:each="error : ${#fields.errors('profilePicture')}"
+                     th:text="${error}" class="alert alert-danger mt-2 auth-alert"></div>
+            </div>
+
             <div class="mb-4">
                 <label for="introduction" class="form-label auth-label">Представяне</label>
                 <input type="text" th:field="*{introduction}" id="introduction"
@@ -36,6 +51,9 @@
                 <select id="workEnd" th:field="*{workEnd}" class="form-control">
                     <option th:each="time : ${times}" th:value="${time}" th:text="${#temporals.format(time, 'HH:mm')}"></option>
                 </select>
+                <div th:if="${timesErrors}" class="alert alert-danger mt-2" role="alert">
+                    Грешка при избиране на часове
+                </div>
             </div>
 
             <input type="submit" class="btn btn-primary mb-2 w-100" value="Регистрация"/>

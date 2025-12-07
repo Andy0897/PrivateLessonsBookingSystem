@@ -82,9 +82,15 @@ public class AppointmentService {
         return dailyFreeTimes;
     }
 
-    public List<Appointment> getAppointmentsByDate(LocalDate date, Long teacherId) {
+    public List<Appointment> getTeacherAppointmentsByDate(LocalDate date, Long teacherId) {
         List<Appointment> appointments =  appointmentRepository.findAllByDate(date);
         appointments.stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
+        return appointments;
+    }
+
+    public List<Appointment> getStudentAppointmentsByDate(LocalDate date, Long studentId) {
+        List<Appointment> appointments =  appointmentRepository.findAllByDate(date);
+        appointments.stream().filter(appointment -> appointment.getStudent().getId() == studentId).toList();
         return appointments;
     }
 }

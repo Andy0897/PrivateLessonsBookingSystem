@@ -4,19 +4,21 @@
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
-    <form th:action="@{/appointments/submit/{teacherId}(teacherId=${teacherId})}" method="post" th:object="${appointment}">
-        <label for="times" class="mb-1">Дата</label>
-        <input type="date" id="date" th:field="*{date}" onchange="updateFreeTimes(this.value)"><br>
-        <label for="times" class="mb-1">Свободни часове</label>
-        <select id="times" th:field="*{time}" class="form-control">
-        </select><br>
-        <label for="times" class="mb-1">Предмет</label>
-        <select id="subject" th:field="*{subject}" class="form-control">
-            <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
-        </select><br>
+    <div class="container mt-5" style="max-width: 600px;">
+        <form th:action="@{/appointments/submit/{teacherId}(teacherId=${teacherId})}" method="post" th:object="${appointment}">
+            <label for="times" class="mb-1">Дата</label>
+            <input type="date" id="date" th:field="*{date}" onchange="updateFreeTimes(this.value)"><br>
+            <label for="times" class="mb-1">Свободни часове</label>
+            <select id="times" th:field="*{time}" class="form-control">
+            </select><br>
+            <label for="times" class="mb-1">Предмет</label>
+            <select id="subject" th:field="*{subject}" class="form-control">
+                <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
+            </select><br>
 
-        <input type="submit" class="btn btn-primary mb-2 w-100" value="Регистрация"/>
-    </form>
+            <input type="submit" class="btn btn-primary mb-2 w-100" value="Регистрация"/>
+        </form>
+    </div>
 </main>
 </body>
 </html>

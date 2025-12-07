@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
 <main>
-    <h1>Appointments</h1>
-    <input type="date" id="date" onchange="updateAppointments(this.value)">
-    <div id="appointments">
-
+    <div sec:authorize="hasAuthority('STUDENT')">
+        <h1 th:text="|${user.firstName} ${user.lastName}|"></h1>
+        <h3 th:text="${user.username}"></h3>
+    </div>
+    <div sec:authorize="hasAuthority('TEACHER')">
+        <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(teacherProfile.profilePicture)}"/>
+        <h1 th:text="|${teacherProfile.user.firstName} ${teacherProfile.user.lastName}|"></h1>
+        <h1>Appointments</h1>
+        <input type="date" id="date" onchange="updateAppointments(this.value)">
+        <div id="appointments"></div>
     </div>
 </main>
 </body>
@@ -18,6 +24,9 @@
         .then(response => response.json())
         .then(appointments => {
             const appointmentsBlock = document.getElementById("appointments");
+            while (appointmentsBlock.firstChild) {
+                appointmentsBlock.removeChild(appointmentsBlock.lastChild);
+            }
             appointments.forEach(appointment => {
                 const p1 = document.createElement("p");
                 p1.textContent = appointment.student.firstName + ' ' + appointment.student.lastName;

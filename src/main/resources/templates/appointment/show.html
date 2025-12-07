@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<<div sec:authorize="hasAuthority('TEACHER')">
+    <input type="date" id="teacherDate" th:field="*{date}" onchange="updateTeacherAppointments(this.value)"><br>
+    <div id="teacherAppointments"></div>
+</div>
+<<div sec:authorize="hasAuthority('STUDENT')">
+    <input type="date" id="studentDate" th:field="*{date}" onchange="updateStudentAppointments(this.value)"><br>
+    <div id="studentAppointments"></div>
+</div>
+</body>
+</html>
+<script>
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+       dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+       mm = '0' + mm;
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("teacherDate").setAttribute("min", today);
+    document.getElementById("studentDate").setAttribute("min", today);
+
+    function updateTeacherAppointments(date) {
+        fetch(`/appointments/update-daily-appointments/${date}/[[${teacherProfile.id}]]`)
+        .then(response => response.json())
+        .then(appointments => {
+            const appointmentsBlock = document.getElementById("appointments");
+            while (appointmentsBlock.firstChild) {
+                appointmentsBlock.removeChild(appointmentsBlock.lastChild);
+            }
+            appointments.forEach(appointment => {
+                const p1 = document.createElement("p");
+                p1.textContent = appointment.student.firstName + ' ' + appointment.student.lastName;
+                const p2 = document.createElement("p");
+                p2.textContent = appointment.date + ' ' + appointment.time;
+                appointmentsBlock.appendChild(p1);
+                appointmentsBlock.appendChild(p2);
+            });
+        })
+        .catch(error => console.error("Error fetching free times:", error));
+    }
+
+    function updateStudentAppointments(date) {
+        fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${teacherProfile.id}]]`)
+        .then(response => response.json())
+        .then(appointments => {
+            const appointmentsBlock = document.getElementById("appointments");
+            while (appointmentsBlock.firstChild) {
+                appointmentsBlock.removeChild(appointmentsBlock.lastChild);
+            }
+            appointments.forEach(appointment => {
+                const p1 = document.createElement("p");
+                p1.textContent = appointment.student.firstName + ' ' + appointment.student.lastName;
+                const p2 = document.createElement("p");
+                p2.textContent = appointment.date + ' ' + appointment.time;
+                appointmentsBlock.appendChild(p1);
+                appointmentsBlock.appendChild(p2);
+            });
+        })
+        .catch(error => console.error("Error fetching free times:", error));
+    }
+</script>
