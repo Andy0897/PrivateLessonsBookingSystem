@@ -28,6 +28,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home", "/access-denied").permitAll()
                         .requestMatchers("/sign-in", "/sign-up", "/submit").anonymous()
+                        .requestMatchers("/appointments/book/**", "/appointments/submit/**", "/appointments/update-daily-student-appointments/{date}/{studentId}", "/teacher-profiles/create", "/teacher-profiles/submit").hasAuthority("STUDENT")
+                        .requestMatchers("/appointments//update-daily-teacher-appointments/**").hasAuthority("TEACHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
