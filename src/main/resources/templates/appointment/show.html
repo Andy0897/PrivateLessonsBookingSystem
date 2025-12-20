@@ -15,10 +15,20 @@
                     Изберете дата, за да видите записаните ученици и планираните уроци.
                 </p>
                 <label class="text-white mb-1 fw-semibold">Избери дата</label>
-                <input type="date" id="teacherDate" onchange="updateTeacherAppointments(this.value)"
-                       class="form-control w-auto mb-4">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <input type="date"
+                           id="teacherDate"
+                           onchange="updateTeacherAppointmentsByDate(this.value)"
+                           class="form-control w-auto">
+                    <button class="btn btn-light neon-button"
+                            onclick="updateTeacherAllAppointments()">
+                        Виж всички
+                    </button>
+                </div>
                 <div id="teacherAppointments" class="row g-3"></div>
-                <div id="teacherNoResults" class="text-center mt-3 text-white opacity-75" style="display:none;">
+                <div id="teacherNoResults"
+                     class="text-center mt-3 text-white opacity-75"
+                     style="display:none;">
                     Няма запазени часове за тази дата.
                 </div>
             </div>
@@ -34,10 +44,20 @@
                     Изберете дата, за да видите при кой учител имате записан урок и кога се провежда.
                 </p>
                 <label class="text-white mb-1 fw-semibold">Избери дата</label>
-                <input type="date" id="studentDate" onchange="updateStudentAppointments(this.value)"
-                       class="form-control w-auto mb-4">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <input type="date"
+                           id="studentDate"
+                           onchange="updateStudentAppointmentsByDate(this.value)"
+                           class="form-control w-auto">
+                    <button class="btn btn-light neon-button"
+                            onclick="updateStudentAllAppointments()">
+                        Виж всички
+                    </button>
+                </div>
                 <div id="studentAppointments" class="row g-3"></div>
-                <div id="studentNoResults" class="text-center mt-3 text-white opacity-75" style="display:none;">
+                <div id="studentNoResults"
+                     class="text-center mt-3 text-white opacity-75"
+                     style="display:none;">
                     Няма запазени часове за тази дата.
                 </div>
             </div>
@@ -83,7 +103,7 @@
         return col;
     }
 
-    function updateTeacherAppointments(date) {
+    function updateTeacherAppointmentsByDate(date) {
         fetch(`/appointments/update-daily-teacher-appointments/${date}/[[${teacher.id}]]`)
         .then(response => response.json())
         .then(appointments => {
@@ -103,8 +123,48 @@
         .catch(error => console.error("Error loading teacher appointments:", error));
     }
 
-    function updateStudentAppointments(date) {
+    function updateStudentAppointmentsByDate(date) {
         fetch(`/appointments/update-daily-student-appointments/${date}/[[${student.id}]]`)
+        .then(response => response.json())
+        .then(appointments => {
+
+            const block = document.getElementById("studentAppointments");
+            block.innerHTML = ""; // clear
+
+            appointments.forEach(ap => {
+                const fullName = ap.teacher.user.firstName + " " + ap.teacher.user.lastName;
+                const timeText = ap.date + " • " + ap.time;
+
+                const card = createAppointmentCard(fullName, timeText);
+                block.appendChild(card);
+            });
+
+        })
+        .catch(error => console.error("Error loading student appointments:", error));
+    }
+
+    function updateTeacherAllAppointments() {
+        fetch(`/appointments/all-teacher-appointments/[[${teacher.id}]]`)
+        .then(response => response.json())
+        .then(appointments => {
+
+            const block = document.getElementById("teacherAppointments");
+            block.innerHTML = ""; // clear
+
+            appointments.forEach(ap => {
+                const fullName = ap.student.firstName + " " + ap.student.lastName;
+                const timeText = ap.date + " • " + ap.time;
+
+                const card = createAppointmentCard(fullName, timeText);
+                block.appendChild(card);
+            });
+
+        })
+        .catch(error => console.error("Error loading teacher appointments:", error));
+    }
+
+    function updateStudentAllAppointments() {
+        fetch(`/appointments/all-student-appointments/[[${student.id}]]`)
         .then(response => response.json())
         .then(appointments => {
 

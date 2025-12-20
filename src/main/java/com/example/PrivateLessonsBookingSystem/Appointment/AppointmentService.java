@@ -93,4 +93,16 @@ public class AppointmentService {
         appointments.stream().filter(appointment -> appointment.getStudent().getId() == studentId).toList();
         return appointments;
     }
+
+    public List<Appointment> getAllStudentAppointments(Long studentId) {
+        List<Appointment> appointments = appointmentRepository.findAllByStudentId(studentId);
+        appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
+        return appointments;
+    }
+
+    public List<Appointment> getAllTeacherAppointments(Long teacherId) {
+        List<Appointment> appointments = appointmentRepository.findAllByTeacherId(teacherId);
+        appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
+        return appointments;
+    }
 }

@@ -5,6 +5,7 @@ import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfile;
 import com.example.PrivateLessonsBookingSystem.TeacherProfile.TeacherProfileRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.security.core.Authentication;
@@ -36,12 +37,8 @@ public class UserController {
 
     @GetMapping({"/", "/home"})
     public String getHome(Model model) {
-        List<TeacherProfile> teachers = new ArrayList<>();
-        List<TeacherProfile> allTeachers = (List<TeacherProfile>) teacherProfileRepository.findAll();
-        for (int i = 0; i < (allTeachers.size() >= 3 ? 3 : allTeachers.size()); i++) {
-            teachers.add(allTeachers.get(i));
-        }
-        model.addAttribute("teachers", teachers);
+        List<TeacherProfile> teachers = (List<TeacherProfile>) teacherProfileRepository.findAll();
+        model.addAttribute("teachers", teachers.subList(0, 3));
         model.addAttribute("encoder", new ImageEncoder());
         return "home";
     }
@@ -82,13 +79,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String getLogout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-
-        return "redirect:/sign-in";
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        new SecurityContextLogoutHandler().logout(request, response, null);
+        return "redirect:/";
     }
 
     @GetMapping("/access-denied")

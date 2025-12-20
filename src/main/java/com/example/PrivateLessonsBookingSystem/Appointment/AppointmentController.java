@@ -79,4 +79,16 @@ public class AppointmentController {
     public List<Appointment> getStudentAppointmentsByDate(@PathVariable("date") LocalDate date, @PathVariable("studentId") Long studentId) {
         return appointmentService.getStudentAppointmentsByDate(date, studentId);
     }
+
+    @ResponseBody
+    @GetMapping("/all-teacher-appointments/{teacherId}")
+    public List<Appointment> getAllTeacherAppointments(@PathVariable("teacherId") Long teacherId) {
+        return appointmentService.getAllTeacherAppointments(teacherId);
+    }
+
+    @ResponseBody
+    @GetMapping("/all-student-appointments/{studentId}")
+    public List<Appointment> getAllStudentAppointments(@PathVariable("studentId") Long studentId) {
+        return appointmentService.getAllStudentAppointments(studentId);
+    }
 }

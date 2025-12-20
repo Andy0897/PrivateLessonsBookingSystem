@@ -39,6 +39,11 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/")
+                )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.sendRedirect("/access-denied");

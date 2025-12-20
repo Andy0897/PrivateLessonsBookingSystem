@@ -65,6 +65,7 @@ public class TeacherProfileService {
         userRepository.save(user);
         teacherProfile.setUser(user);
         teacherProfileRepository.save(teacherProfile);
+
         return "redirect:/logout";
     }
 
