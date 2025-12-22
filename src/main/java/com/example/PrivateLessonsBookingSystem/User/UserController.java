@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping({"/", "/home"})
     public String getHome(Model model) {
         List<TeacherProfile> teachers = (List<TeacherProfile>) teacherProfileRepository.findAll();
-        model.addAttribute("teachers", teachers.subList(0, 3));
+        model.addAttribute("teachers", teachers.size() > 3 ? teachers.subList(0, 3) : teachers);
         model.addAttribute("encoder", new ImageEncoder());
         return "home";
     }
