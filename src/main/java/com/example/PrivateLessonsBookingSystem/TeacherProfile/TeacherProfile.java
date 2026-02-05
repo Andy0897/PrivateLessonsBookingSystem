@@ -42,6 +42,8 @@ public class TeacherProfile {
     @NotNull(message = "Полето не може да бъде празно.")
     private LocalTime workEnd;
 
+    //TODO цена на час
+
     public Long getId() {
         return id;
     }
