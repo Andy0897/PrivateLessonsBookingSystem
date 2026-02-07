@@ -50,7 +50,7 @@ public class TeacherProfileService {
             imageError = true;
         }
 
-        if(bindingResult.hasFieldErrors("introduction") || bindingResult.hasFieldErrors("subjects") || nullImage || imageError || timesErrors) {
+        if(bindingResult.hasFieldErrors("introduction") || bindingResult.hasFieldErrors("subjects") || bindingResult.hasFieldErrors("pricePerHour") || nullImage || imageError || timesErrors) {
             model.addAttribute("teacherProfile", teacherProfile);
             model.addAttribute("isImageUploaded", teacherProfile.getProfilePicture() != null);
             model.addAttribute("hasUploadError", imageError);

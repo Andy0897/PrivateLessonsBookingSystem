@@ -42,7 +42,8 @@ public class TeacherProfile {
     @NotNull(message = "Полето не може да бъде празно.")
     private LocalTime workEnd;
 
-    //TODO цена на час
+    @Min(value = 0, message = "Цената трябва да бъде по-голяма от 0 лв.")
+    private double pricePerHour;
 
     public Long getId() {
         return id;
@@ -98,6 +99,14 @@ public class TeacherProfile {
 
     public void setWorkEnd(LocalTime workEnd) {
         this.workEnd = workEnd;
+    }
+
+    public double getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public void setPricePerHour(double pricePerHour) {
+        this.pricePerHour = pricePerHour;
     }
 
     public void addSubject(Subject subject) {

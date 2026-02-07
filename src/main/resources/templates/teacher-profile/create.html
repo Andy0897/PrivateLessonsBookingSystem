@@ -60,6 +60,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="mb-4">
+                    <label for="pricePerHour" class="form-label">Цена за час</label>
+                    <input type="text" id="pricePerHour" th:field="*{pricePerHour}" class="form-control">
+                    <div th:each="error : ${#fields.errors('pricePerHour')}"
+                         th:text="${error}" class="alert alert-danger mt-2"></div>
+                </div>
                 <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-semibold">
                     Регистрация
                 </button>
