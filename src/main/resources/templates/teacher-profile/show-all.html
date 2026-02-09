@@ -7,7 +7,36 @@
     <div class="container py-5">
         <h1 class="text-center mb-5 fw-bold text-light">Нашите преподаватели</h1>
 
-<!--TODO добави филтриране-->
+        <form method="get" th:action="@{/teacher-profiles}" class="row g-2 align-items-end mb-4">
+            <div class="col-md-6">
+                <label class="form-label text-light fw-semibold">Филтър по предмет</label>
+                <select name="subjectId" class="form-select"
+                        onchange="this.form.submit()">
+                    <option th:value="${null}" th:selected="${selectedSubjectId == null}">
+                        Всички предмети
+                    </option>
+
+                    <option th:each="subject : ${subjects}"
+                            th:value="${subject.id}"
+                            th:text="${subject.name}"
+                            th:selected="${selectedSubjectId != null and selectedSubjectId == subject.id}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                    Търси
+                </button>
+            </div>
+
+            <div class="col-md-3">
+                <a class="btn btn-outline-light w-100 fw-semibold" th:href="@{/teacher-profiles}">
+                    Изчисти
+                </a>
+            </div>
+        </form>
+
         <div class="row g-4">
             <div class="col-lg-4 col-md-6"
                  th:each="teacherProfile : ${teacherProfiles}">

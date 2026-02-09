@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/teacher-profiles")
@@ -29,8 +30,16 @@ public class TeacherProfileController {
     }
 
     @GetMapping
-    public String getShowTeacherProfiles(Model model) {
-        model.addAttribute("teacherProfiles", teacherProfileRepository.findAll());
+    public String getShowTeacherProfiles(@RequestParam(name = "subjectId", required = false) Long subjectId, Model model) {
+        List<TeacherProfile> teacherProfiles;
+        if(subjectId != null) {
+            teacherProfiles = (List<TeacherProfile>) teacherProfileRepository.findAllTeacherProfilesBySubjectId(subjectId);
+        }
+        else {
+            teacherProfiles = (List<TeacherProfile>) teacherProfileRepository.findAll();
+        }
+        model.addAttribute("teacherProfiles", teacherProfiles);
+        model.addAttribute("subjects", subjectRepository.findAll());
         model.addAttribute("encoder", new ImageEncoder());
         return "teacher-profile/show-all";
     }
