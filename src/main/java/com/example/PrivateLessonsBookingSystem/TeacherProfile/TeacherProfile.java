@@ -42,7 +42,7 @@ public class TeacherProfile {
     @NotNull(message = "Полето не може да бъде празно.")
     private LocalTime workEnd;
 
-    @Min(value = 0, message = "Цената трябва да бъде по-голяма от 0 лв.")
+    @Min(value = 1, message = "Цената трябва да бъде по-голяма от 1 лв.")
     private double pricePerHour;
 
     public Long getId() {

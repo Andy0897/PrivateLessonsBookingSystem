@@ -20,11 +20,15 @@
                     <label for="date" class="form-label fw-semibold">Дата</label>
                     <input type="date" id="date" th:field="*{date}" onchange="updateFreeTimes(this.value)"
                            class="form-control custom-input">
+                    <div th:each="error : ${#fields.errors('date')}"
+                         th:text="${error}" class="alert alert-danger mt-2"></div>
                 </div>
                 <div class="col-12">
                     <label for="times" class="form-label fw-semibold">Свободни часове</label>
                     <select id="times" th:field="*{time}" class="form-select custom-input">
                     </select>
+                    <div th:each="error : ${#fields.errors('time')}"
+                         th:text="${error}" class="alert alert-danger mt-2"></div>
                 </div>
                 <div class="col-12">
                     <label for="subject" class="form-label fw-semibold">Предмет</label>

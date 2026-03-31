@@ -20,7 +20,7 @@
                         th:text="|${teacherProfile.user.firstName} ${teacherProfile.user.lastName}|"></h1>
                     <div class="mb-3">
                         <span class="badge bg-success fs-5 px-4 py-2 shadow-sm">
-                            <span th:text="|${teacherProfile.pricePerHour} лв / час|"></span>
+                            <span th:text="|${#numbers.formatDecimal(teacherProfile.pricePerHour, 2, 2)} лв / час|"></span>
                         </span>
                     </div>
                     <p class="fs-5 opacity-75"

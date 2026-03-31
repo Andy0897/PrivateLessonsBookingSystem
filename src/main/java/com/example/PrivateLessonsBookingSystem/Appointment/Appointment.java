@@ -18,19 +18,19 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private TeacherProfile teacher;
 
-    @OneToOne
+    @ManyToOne
     private User student;
 
-    @OneToOne
+    @ManyToOne
     private Subject subject;
 
-    @NotNull
+    @NotNull(message = "Полето не трябва да бъде празно")
     private LocalDate date;
 
-    @NotNull
+    @NotNull(message = "Полето не трябва да бъде празно")
     private LocalTime time;
 
     public Long getId() {

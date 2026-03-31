@@ -33,11 +33,9 @@ public class AppointmentService {
 
     public String submitAppointment(Appointment appointment, BindingResult bindingResult, Long teacherId, Principal principal, Model model) {
         if(bindingResult.hasFieldErrors("date") || bindingResult.hasFieldErrors("time")) {
-            System.out.println("Binding res");
-            System.out.println(bindingResult.hasFieldErrors("date"));
-            System.out.println(bindingResult.hasFieldErrors("time"));
             model.addAttribute("appointment", appointment);
             model.addAttribute("teacherId", teacherId);
+            model.addAttribute("subjects", teacherProfileRepository.findById(teacherId).get().getSubjects());
             return "appointment/book";
         }
         TeacherProfile teacher = teacherProfileRepository.findById(teacherId).get();
@@ -84,25 +82,25 @@ public class AppointmentService {
 
     public List<Appointment> getTeacherAppointmentsByDate(LocalDate date, Long teacherId) {
         List<Appointment> appointments =  appointmentRepository.findAllByDate(date);
-        appointments.stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
+        appointments = appointments.stream().filter(appointment -> appointment.getTeacher().getId() == teacherId).toList();
         return appointments;
     }
 
     public List<Appointment> getStudentAppointmentsByDate(LocalDate date, Long studentId) {
         List<Appointment> appointments =  appointmentRepository.findAllByDate(date);
-        appointments.stream().filter(appointment -> appointment.getStudent().getId() == studentId).toList();
+        appointments = appointments.stream().filter(appointment -> appointment.getStudent().getId().equals(studentId)).toList();
         return appointments;
     }
 
     public List<Appointment> getAllStudentAppointments(Long studentId) {
         List<Appointment> appointments = appointmentRepository.findAllByStudentId(studentId);
-        appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
+        appointments = appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
         return appointments;
     }
 
     public List<Appointment> getAllTeacherAppointments(Long teacherId) {
         List<Appointment> appointments = appointmentRepository.findAllByTeacherId(teacherId);
-        appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
+        appointments = appointments.stream().filter(appointment -> appointment.getDate().isAfter(LocalDate.now())).toList();
         return appointments;
     }
 }
